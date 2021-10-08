@@ -1,0 +1,10 @@
+support:
+    database:
+        type: "tinydb"
+        path: "/tmp/data_manager_db.json"
+    
+    frontend:
+        tiles: 10
+
+verbose: True
+verbose_info: True
