@@ -9,8 +9,19 @@ RUN pip install -r requirements.txt
 WORKDIR /app/yoda_manager/frontend
 COPY ./yoda_manager/frontend/package.json /app/yoda_manager/frontend/package.json
 RUN npm install
-RUN npm install @material-ui/core@latest && npm install @emotion/react && npm install @emotion/styled
+# Install material-ui
+RUN npm install @material-ui/core@latest && \
+    npm install @emotion/react && \
+    npm install @emotion/styled
 
+RUN npm install @material-ui/icons@latest
+RUN npm install @material-ui/styles@latest
+
+# Install react router
+RUN npm install react-router-dom
+
+# Install environment
+RUN npm install env-cmd
 
 COPY . /app
 
