@@ -11,13 +11,10 @@ fakeRequest = {"path": "s3://yoda-tiny-set/versions/snapshot1.csv"}
 query = {"is_baby_yoda":1, "sample_set_type" : "train"}
 updatedQuery = {"is_baby_yoda":0}
 
-updated_labels = [
-        {"filepath": "s3://yoda-tiny-set/data/1.jpeg", "is_baby_yoda": 0},
-        {"filepath": "s3://yoda-tiny-set/data/2.jpeg", "is_baby_yoda": 0}
-    ]
+updated_labels = [{"uid": "f014a4b22f6200b57440eb282a94df20", "is_baby_yoda": 0}]
 
 upload_from_file(fakeRequest)
-#print(get_selected_view_rows(query))
+print(get_selected_view_rows(query))
 
 update_labels(updated_labels)
 print(get_selected_view_rows(updatedQuery))

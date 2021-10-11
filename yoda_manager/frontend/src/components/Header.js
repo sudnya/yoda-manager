@@ -31,7 +31,7 @@ export default function ButtonAppBar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            Image Detection Platform - Yoda Manager
+            Yoda Image Classification Platform
           </Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>

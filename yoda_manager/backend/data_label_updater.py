@@ -9,13 +9,19 @@ from yoda_manager.core.filestorage.s3 import get_presigned_url, write_to_path
 
 #TODO: check if we need to extract json payload?
 def update_labels(updated_labels):
+    print('Updating labels!!')
     database = Database(get_config())
     for label in updated_labels:
-        query = { 'filepath' : label.get('filepath')}
-        new_label = {'is_baby_yoda' : label.get('is_baby_yoda')}
-        database.update(query, new_label)
-        updated_row = database.search(query)
-        #write json blob to labelpath in s3
-        label_path = updated_row[0].get('labelpath')
-        write_to_path(label_path, new_label)
+        query = { 'uid' : label.get('uid')}
+        entry = database.search(query)[0]
+        print(label)
+        print('Returned entry:')
+        print(entry)
+        entry['is_baby_yoda'] = label.get('is_baby_yoda')
+        database.update(query, entry)
+        print('updated entry in db')
+        print(database.search(query)[0])
+        #TODO: write to a new label file and update path in dataversion
+        label_path = entry.get('labelpath')
+        write_to_path(label_path, entry['is_baby_yoda'])
         
