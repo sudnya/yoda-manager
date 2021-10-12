@@ -1,10 +1,10 @@
 from tinydb import TinyDB, Query
 
 class TinyDBWrapper:
-    def __init__(self, config):
+    def __init__(self, config, table_name):
         self.config = config
         self.db = TinyDB(self.config["support"]["database"]["path"])
-        self.table = self.db.table('_default', cache_size=30)
+        self.table = self.db.table(table_name, cache_size=30)
 
 
     def insert(self, entry):

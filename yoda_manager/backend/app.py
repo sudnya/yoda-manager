@@ -6,6 +6,7 @@ from yoda_manager.util.config import create_config
 from data_uploader import upload_from_file
 from data_explorer import get_selected_view_rows
 from data_label_updater import update_labels
+from data_exporter import export
 
 MODE = os.getenv('FLASK_ENV')
 
@@ -32,9 +33,11 @@ def updateLabels():
     update_labels((request.json).get('data'))
     return {"response": "200"}
 
-@app.route('/yoda-manager/snapshot-view', methods=['POST'])
+@app.route('/yoda-manager/export-view', methods=['GET', 'POST'])
 def snapshotView():
-    print("Export snapshot of data")
+    print("Export view of data")
+    export(request.json["view"], request.json["data"])
+    return {"response": "200"}
 
 if __name__ == '__main__':
     create_config()

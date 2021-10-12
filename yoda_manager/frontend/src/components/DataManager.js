@@ -155,6 +155,23 @@ export default class DataManager extends React.Component {
         .catch(console.log)
     }
 
+    export() {
+        fetch('http://localhost:5000/yoda-manager/export-view',
+        {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ view : this.state.viewFilter, data : this.state.images}) // body data type must match "Content-Type" header
+        }
+    )
+    .then(res => res.json())
+    .then((data) => {
+        console.log("Got response: ", data);
+    })
+    .catch(console.log)
+    }
 
     render() {
         return <div>
@@ -215,7 +232,20 @@ export default class DataManager extends React.Component {
                 </ImageList>
             </Grid>
 
-    
+            <br />
+            <br />
+
+            <Grid container justifyContent = "center">
+            <Button id="exportSelected" variant="contained" onClick={() =>
+                {
+                    this.export();
+                }
+            }>
+            Export selected view
+            </Button>    
+        </Grid>
+
+
         </div>;
     }
 }

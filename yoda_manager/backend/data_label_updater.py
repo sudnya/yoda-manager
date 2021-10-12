@@ -10,7 +10,7 @@ from yoda_manager.core.filestorage.s3 import get_presigned_url, write_to_path
 #TODO: check if we need to extract json payload?
 def update_labels(updated_labels):
     print('Updating labels!!')
-    database = Database(get_config())
+    database = Database(get_config(), get_config()['data_manager']['default_table_name'])
     for label in updated_labels:
         query = { 'uid' : label.get('uid')}
         entry = database.search(query)[0]
