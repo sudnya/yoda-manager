@@ -25,7 +25,7 @@ def getView():
     print("Get View of data" + str(request.args))
     return {"response" : get_selected_view_rows(request.args)}
 
-@app.route('/yoda-manager/update-labels', methods=['POST'])
+@app.route('/yoda-manager/update-labels', methods=['GET', 'POST'])
 def updateLabels():
     print("Update labels in data")
     # get a list of [filename, is_baby_yoda=1/0]

@@ -10,7 +10,7 @@ def get_selected_view_rows(queryString):
     if queryString is None:
         retVal = database.all()
     retVal = database.search(queryString)
-    return [get_presigned_url(s3path['filepath']) for s3path in retVal]
+    return [(get_presigned_url(entry['filepath']), entry.get('uid')) for entry in retVal]
 
 def get_row(queryString):
     database = Database(get_config())

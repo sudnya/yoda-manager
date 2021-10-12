@@ -25,7 +25,7 @@ class TinyDBWrapper:
                 queryFilter = query[k] == v
                 isset = True
         print(queryFilter)
-        return self.table.search(queryFilter)[:self.config["support"]["frontend"]["tiles"]]
+        return self.table.search(queryFilter)#[:self.config["support"]["frontend"]["tiles"]]
 
     def update(self, queryString, updatedLabels):
         query = Query()
