@@ -1,9 +1,9 @@
 import json
-from yoda_manager.backend.data_label_updater import update_labels
-from yoda_manager.backend.data_uploader import upload_from_file
-from yoda_manager.backend.data_explorer import get_selected_view_rows
-from yoda_manager.backend.data_label_updater import update_labels
-from data_exporter import export
+from yoda_manager.datamanager.data_label_updater import update_labels
+from yoda_manager.datamanager.data_uploader import upload_from_file
+from yoda_manager.datamanager.data_explorer import get_selected_view_rows
+from yoda_manager.datamanager.data_label_updater import update_labels
+from yoda_manager.datamanager.data_exporter import export
 
 from yoda_manager.util.config import create_config
 

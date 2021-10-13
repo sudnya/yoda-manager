@@ -1,1 +1,1 @@
-docker run --rm -it -p 3000:3000 -p 5000:5000 -v $HOME/.aws/credentials:/root/.aws/credentials:ro yoda-manager:latest
+docker run --rm -it -p 3000:3000 -p 5000:5000 -v $HOME/.aws/credentials:/root/.aws/credentials:ro -v /var/run/docker.sock:/var/run/docker.sock -e YODA_MANAGER_CREDENTIALS_PATH="$HOME/.aws/credentials" yoda-manager:latest

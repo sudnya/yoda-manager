@@ -23,5 +23,5 @@ def update_labels(updated_labels):
         print(database.search(query)[0])
         #TODO: write to a new label file and update path in dataversion
         label_path = entry.get('labelpath')
-        write_to_path(label_path, entry['is_baby_yoda'])
+        write_to_path(label_path, {'is_baby_yoda' : entry['is_baby_yoda']})
         

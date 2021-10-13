@@ -7,9 +7,9 @@ logger = logging.getLogger(__name__)
 
 global_config = None
 
-def create_config():
+def create_config(arguments):
     global global_config
-    global_config = setup_config({})
+    global_config = setup_config(arguments)
 
     setup_logging(global_config)
 
@@ -17,25 +17,26 @@ def create_config():
 
     return global_config
 
-def get_config():
+def get_config(arguments):
     global global_config
-    assert global_config is not None
+    if global_config is None:
+        create_config(arguments)
     return global_config
 
 def setup_config(dictionary = {}):
     return config.ConfigurationSet(
-        config.config_from_env(prefix="YODA_MANAGER", separator="_", lowercase_keys=True),
-        config.config_from_yaml(config_path(), read_from_file=True),
         config.config_from_dict(dictionary),
+        config.config_from_env(prefix="RESNET50TRAINER"),
+        config.config_from_yaml(config_path(), read_from_file=True),
     )
 
 def config_path():
     home = os.path.expanduser("~")
-    home_config_path = os.path.join(home, ".yoda-manager.yaml")
+    home_config_path = os.path.join(home, ".yoda_trainer.yaml")
     if os.path.exists(home_config_path):
         return home_config_path
 
-    return os.path.join(os.path.dirname(os.path.dirname(__file__)), "configuration", "yoda-manager.yaml")
+    return os.path.join(os.path.dirname(os.path.dirname(__file__)), "configuration", "yoda_trainer.yaml")
 
 def setup_logging(arguments):
 
@@ -60,5 +61,4 @@ def setup_logging(arguments):
     logging.getLogger("urllib3").setLevel(logging.WARNING)
     logging.getLogger("botocore").setLevel(logging.WARNING)
     logging.getLogger("smart_open").setLevel(logging.WARNING)
-    logging.getLogger("s3transfer").setLevel(logging.WARNING)
 
