@@ -3,7 +3,7 @@ from yoda_manager.util.config import get_config
 from yoda_manager.core.filestorage.s3 import get_presigned_url
 
 def get_selected_view_rows(queryString):
-    database = Database(get_config())
+    database = Database(get_config(), get_config()['data_manager']['default_table_name'])
     print('Looking for query: ')
     print(queryString)
     retVal = []
@@ -13,7 +13,7 @@ def get_selected_view_rows(queryString):
     return [(get_presigned_url(entry['filepath']), entry.get('uid')) for entry in retVal]
 
 def get_row(queryString):
-    database = Database(get_config())
+    database = Database(get_config(), get_config()['data_manager']['default_table_name'])
     print('Looking for query: ')
     print(queryString)
     retVal = []

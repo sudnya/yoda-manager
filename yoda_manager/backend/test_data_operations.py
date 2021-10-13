@@ -3,6 +3,7 @@ from yoda_manager.backend.data_label_updater import update_labels
 from yoda_manager.backend.data_uploader import upload_from_file
 from yoda_manager.backend.data_explorer import get_selected_view_rows
 from yoda_manager.backend.data_label_updater import update_labels
+from data_exporter import export
 
 from yoda_manager.util.config import create_config
 
@@ -18,3 +19,13 @@ print(get_selected_view_rows(query))
 
 update_labels(updated_labels)
 print(get_selected_view_rows(updatedQuery))
+
+exportPayload = {
+    "view": {"is_baby_yoda": 0, "sample_set_type" : "train"},
+    "data":
+    [
+        {"uid": "f014a4b22f6200b57440eb282a94df20"}
+    ]
+}
+
+export(exportPayload["view"], exportPayload["data"])

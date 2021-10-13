@@ -1,3 +1,6 @@
+from yoda_manager.core.database import Database
+from yoda_manager.util.config import get_config
+
 from smart_open import open
 import csv
 import hashlib
@@ -6,7 +9,7 @@ from yoda_manager.core.database import Database
 from yoda_manager.util.config import get_config
 
 def upload_from_file(payload):
-    database = Database(get_config())
+    database = Database(get_config(), get_config()['data_manager']['default_table_name'])
     
     with open(payload['path'], newline='') as csvfile:
         inputFile = csv.DictReader(csvfile, delimiter=',', quotechar='|')
