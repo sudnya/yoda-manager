@@ -54,7 +54,7 @@ export default class ModelManager extends React.Component {
   }
 
   refresh() {
-    fetch('http://localhost:5000/yoda-manager/get_exported_datasets',
+    fetch(process.env.REACT_APP_API_URL + '/yoda-manager/get_exported_datasets',
         {
             method: 'GET', // *GET, POST, PUT, DELETE, etc.
             cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -69,7 +69,7 @@ export default class ModelManager extends React.Component {
         this.handleAllDatasetsUpdate(data);
     })
     .catch(console.log)
-    fetch('http://localhost:5000/yoda-manager/get_training_jobs',
+    fetch(process.env.REACT_APP_API_URL + '/yoda-manager/get_training_jobs',
             {
                 method: 'GET', // *GET, POST, PUT, DELETE, etc.
                 cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -111,7 +111,7 @@ export default class ModelManager extends React.Component {
                 <Box m={1}>
                     <Button id="train" variant="contained" onClick={ () =>
                         {
-                            fetch('http://localhost:5000/yoda-manager/train',
+                            fetch(process.env.REACT_APP_API_URL + '/yoda-manager/train',
                                 {
                                     method: 'POST', // *GET, POST, PUT, DELETE, etc.
                                     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached

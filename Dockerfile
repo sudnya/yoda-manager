@@ -1,4 +1,4 @@
-FROM python:3.9
+FROM python:3.9 as base
 
 RUN apt-get -yq update && apt-get install -yqq npm
 

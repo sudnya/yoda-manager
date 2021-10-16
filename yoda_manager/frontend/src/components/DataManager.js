@@ -97,7 +97,7 @@ export default class DataManager extends React.Component {
     }
 
     upload(csvPath) {
-        fetch('http://localhost:5000/yoda-manager/data-upload',
+        fetch(process.env.REACT_APP_API_URL + '/yoda-manager/data-upload',
         {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
             cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -115,7 +115,7 @@ export default class DataManager extends React.Component {
     }
 
     getView(view) {
-        var url = new URL('http://localhost:5000/yoda-manager/get-data-view'),
+        var url = new URL(process.env.REACT_APP_API_URL + '/yoda-manager/get-data-view'),
         params = view
         Object.keys(params).forEach(key => url.searchParams.append(key, params[key]))
         fetch(url,
@@ -136,7 +136,7 @@ export default class DataManager extends React.Component {
     }
 
     updateSelected(images) {
-        var url = new URL('http://localhost:5000/yoda-manager/update-labels');
+        var url = new URL(process.env.REACT_APP_API_URL + '/yoda-manager/update-labels');
         var updateLabelsBody = this.handleUpdateLabels();
         fetch(url,
             {
@@ -156,7 +156,7 @@ export default class DataManager extends React.Component {
     }
 
     export() {
-        fetch('http://localhost:5000/yoda-manager/export-view',
+        fetch(process.env.REACT_APP_API_URL + '/yoda-manager/export-view',
         {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
             cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
