@@ -33,7 +33,7 @@ def export(view, images):
             for result in results:
                 jsonlines_writer.write(result)
 
-    exported_database = Database(config, config['data_manager']['export_table_name'])
+    exported_database = Database(config, config['data_manager']['export']['table_name'])
 
     exported_database.insert({"id" : hash_md5.hexdigest(), "path" : dataset_path})
     return dataset_path

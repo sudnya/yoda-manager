@@ -1,12 +1,11 @@
 import os
 from flask import Flask, render_template, request, redirect
 from flask_cors import CORS #comment this on deployment
-from yoda_manager.util.config import create_config
+import yoda_manager
 
-from data_uploader import upload_from_file
-from data_explorer import get_selected_view_rows
-from data_label_updater import update_labels
-from data_exporter import export
+import logging
+
+logger = logging.getLogger(__name__)
 
 MODE = os.getenv('FLASK_ENV')
 
@@ -17,29 +16,50 @@ CORS(app) #comment this on deployment
 @app.route('/yoda-manager/data-upload', methods=['GET', 'POST'])
 def dataUpload():
     if request.method == "POST":
-        print('Upload called')
-        upload_from_file(request.json)
+        logger.debug('Upload called')
+        yoda_manager.upload_from_file(request.json)
     return {"response": "200"}
 
 @app.route('/yoda-manager/get-data-view', methods=['GET'])
 def getView():
-    print("Get View of data" + str(request.args))
-    return {"response" : get_selected_view_rows(request.args)}
+    logger.debug("Get View of data" + str(request.args))
+    return {"response" : yoda_manager.get_selected_view_rows(request.args)}
 
 @app.route('/yoda-manager/update-labels', methods=['GET', 'POST'])
 def updateLabels():
-    print("Update labels in data")
+    logger.debug("Update labels in data")
     # get a list of [filename, is_baby_yoda=1/0]
-    update_labels((request.json).get('data'))
+    yoda_manager.update_labels((request.json).get('data'))
     return {"response": "200"}
 
 @app.route('/yoda-manager/export-view', methods=['GET', 'POST'])
 def snapshotView():
-    print("Export view of data")
-    export(request.json["view"], request.json["data"])
+    logger.debug("Export view of data")
+    yoda_manager.export(request.json["view"], request.json["data"])
     return {"response": "200"}
 
+@app.route('/yoda-manager/train', methods=['GET', 'POST'])
+def train():
+    logger.debug("Training new model: " + str(request.json))
+    model = yoda_manager.train(request.json)
+    return { "model" : model}
+
+
+@app.route('/yoda-manager/get_exported_datasets', methods=['GET', 'POST'])
+def get_exported_datasets():
+    logger.debug("Getting exported datasets...")
+    datasets = yoda_manager.get_exported_datasets()
+    return { "datasets" : datasets }
+
+@app.route('/yoda-manager/get_training_jobs', methods=['GET', 'POST'])
+def get_training_jobs():
+    logger.debug("Getting training jobs...")
+    jobs = yoda_manager.get_training_jobs()
+    return { "jobs" : jobs }
+
+
+
 if __name__ == '__main__':
-    create_config()
+    yoda_manager.create_config()
     app.run(host='0.0.0.0')
 

@@ -10,7 +10,15 @@ data_manager:
     default_table_name: "_default"
     export:
         path: "s3://yoda-tiny-set/exports/"
-    export_table_name: "exported-snapshot"
+        table_name: "exported-snapshot"
+
+model_trainer:
+    #TODO: is this correct?
+    training_path: "s3://yoda-tiny-set/models/yodadetector1/training-jobs/"
+    job_table_name: "training_jobs"
+
+    trainer:
+        type: "local"
 
 verbose: True
 verbose_info: True

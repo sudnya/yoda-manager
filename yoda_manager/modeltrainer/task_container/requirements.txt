@@ -1,0 +1,5 @@
+python-configuration[yaml]
+smart_open[s3]
+jsonlines
+tensorflow-io==0.21.0
+pyyaml

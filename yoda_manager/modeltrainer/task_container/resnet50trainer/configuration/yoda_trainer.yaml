@@ -1,0 +1,17 @@
+model:
+    type: "keyword"
+    label: "yoda"
+    repeat: 32
+    batch_size: 2
+    epochs: 10
+
+    save_path: "s3://yoda-tiny-set/models/yodadetector1/model-snaphot"
+    results_path: "s3://yoda-tiny-set/models/yodadetector1/model-snaphot/results.json"
+
+dataset:
+    path: "s3://yoda-tiny-set/exports/f599d95f507c69c1347dbe1370d1270f.jsonlines"
+
+verbose: True
+verbose_info: True
+
+aws_region: us-east-1
