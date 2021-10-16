@@ -1,1 +1,1 @@
-docker build -t yoda-manager:latest .
+docker build --target development -t yoda-manager:latest .

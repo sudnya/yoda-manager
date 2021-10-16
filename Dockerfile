@@ -24,8 +24,18 @@ RUN npm install react-router-dom
 RUN npm install env-cmd
 
 COPY . /app
+WORKDIR /app
+
+# Developement target
+FROM base as development
 
 RUN chmod a+x /app/scripts/start-dev.sh
 
-WORKDIR /app
 ENTRYPOINT ["/app/scripts/start-dev.sh"]
+
+# Staging target
+FROM base as staging
+
+RUN chmod a+x /app/scripts/start-staging.sh
+
+ENTRYPOINT ["/app/scripts/start-staging.sh"]
