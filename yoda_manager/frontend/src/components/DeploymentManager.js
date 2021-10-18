@@ -18,7 +18,8 @@ export default function DeploymentManager() {
 
   return (
     <div className={classes.root}>
-        Work in progress.
+        Coming soon... work in progress.
+        Contact sudnyadiamos@gmail for more details.
     </div>
   );
 }

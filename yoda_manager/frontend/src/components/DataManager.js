@@ -228,18 +228,7 @@ export default class DataManager extends React.Component {
         </Grid>
 
             <br />
-            <Grid container justifyContent = "center">
-            <FormGroup>
-                <FormControlLabel control={<Checkbox defaultChecked onClick={this.handleLabelUpdate} />}  label="IsBabyYoda" />
-            </FormGroup>
-            <Button id="updateSelected" variant="contained" onClick={() =>
-                {
-                    this.updateSelected();
-                }
-            }>
-            Update labels of selected
-            </Button>       
-        </Grid>
+            
             <Grid container justifyContent = "center">
                 <ImageList sx={{ width: 1000, height: 450 }} cols={5} rowHeight={164}>
                     {this.state.images.map((item) => (
@@ -255,7 +244,19 @@ export default class DataManager extends React.Component {
                     ))}
                 </ImageList>
             </Grid>
-
+            <Grid container justifyContent = "center">
+            <FormGroup>
+                <FormControlLabel control={<Checkbox defaultChecked onClick={this.handleLabelUpdate} />}  label="IsBabyYoda" />
+            </FormGroup>
+            <Button id="updateSelected" variant="contained" onClick={() =>
+                {
+                    this.updateSelected();
+                }
+            }>
+                
+            Update labels of selected
+            </Button>       
+        </Grid>
             <br />
             <br />
 

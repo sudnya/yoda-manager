@@ -3,7 +3,7 @@ model:
     label: "yoda"
     repeat: 32
     batch_size: 2
-    epochs: 10
+    epochs: 2
 
     save_path: "s3://yoda-tiny-set/models/yodadetector1/model-snaphot"
     results_path: "s3://yoda-tiny-set/models/yodadetector1/model-snaphot/results.json"

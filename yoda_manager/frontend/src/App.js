@@ -9,7 +9,7 @@ import ButtonAppBar from './components/Header'
 import MyButton from './components/Footer'
 import DataManager from './components/DataManager'
 import ModelManager from './components/ModelManager'
-import Home from './components/Home'
+import About from './components/About'
 import DeploymentManager from './components/DeploymentManager'
 
 class App extends React.Component {
@@ -19,14 +19,14 @@ class App extends React.Component {
             <ButtonAppBar />
             <Router>
                 <div>
-                      <Link to="/"><Button color="inherit">Home</Button></Link>
+                      <Link to="/"><Button color="inherit">About</Button></Link>
                       <Link to="/data"><Button color="inherit">Data</Button></Link>
                       <Link to="/model"><Button color="inherit">Model</Button></Link>
                       <Link to="/deploy"><Button color="inherit">Deployment</Button></Link>
     
                   <hr />
     
-                  <Route exact path="/" component={Home} />
+                  <Route exact path="/" component={About} />
                   <Route path="/data" component={DataManager} />
                   <Route path="/model" component={ModelManager} />
                   <Route path="/deploy" component={DeploymentManager} />

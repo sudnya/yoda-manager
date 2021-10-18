@@ -31,7 +31,7 @@ export default function ButtonAppBar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            Image Classification Platform with Active Learning
+            Data Centric Vision Platform
           </Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>
