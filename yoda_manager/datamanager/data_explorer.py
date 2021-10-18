@@ -6,12 +6,14 @@ def get_selected_view_rows(queryString):
     database = Database(get_config(), get_config()['data_manager']['default_table_name'])
     print('Looking for query: ')
     print(queryString)
-    retVal = []
+    rows_selected = []
     if queryString is None:
-        retVal = database.all()
-    retVal = database.search(queryString)
-    return [(get_presigned_url(entry['filepath']), entry.get('uid')) for entry in retVal]
+        rows_selected = database.all()
+    rows_selected = database.search(queryString)
+    retVal = [(get_presigned_url(entry['filepath']), entry.get('uid')) for entry in sorted(rows_selected, key=lambda x : float(x['label_confidence']))]
+    return retVal
 
+'''
 def get_row(queryString):
     database = Database(get_config(), get_config()['data_manager']['default_table_name'])
     print('Looking for query: ')
@@ -22,3 +24,4 @@ def get_row(queryString):
         assert True
     retVal = database.search(queryString)
     return retVal[0]
+'''

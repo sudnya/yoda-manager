@@ -7,7 +7,7 @@ import json
 import time
 from smart_open import open
 
-from resnet50trainer import get_dataset
+from resnet50trainer import get_dataset, get_unlabeled_dataset, dataset_unlabeled_file_generator, dataset_unlabeled_uid_file_generator
 from resnet50trainer import get_model
 from resnet50trainer import get_config
 
@@ -46,8 +46,13 @@ def main():
     logger.debug("Training dataset: " + str(train_dataset))
 
     logger.debug("Loading test dataset...")
-    test_dataset = get_dataset(config, "train")
+    test_dataset = get_dataset(config, "test")
     logger.debug("Test dataset: " + str(test_dataset))
+
+
+    logger.debug("Loading unlabeled dataset...")
+    unlabeled_dataset = get_unlabeled_dataset(config)
+    logger.debug("unlabeled dataset: " + str(unlabeled_dataset))
 
     logger.debug("Creating model...")
     model = get_model(config, train_dataset)
@@ -64,10 +69,22 @@ def main():
     logger.debug("Saving model...")
     model.save(config["model"]["save_path"])
 
+    predictions = model.predict(unlabeled_dataset, batch_size=None, verbose=2, steps=None, callbacks=None, max_queue_size=10,
+    workers=1, use_multiprocessing=False)
+
+    logger.info("Predictions are:")
+    logger.info(str(tf.nn.softmax(predictions)))
+    confusion_scores = tf.math.abs(tf.nn.softmax(predictions)[:,1] - 0.5).numpy().tolist()
+
     logger.debug("Saving results to: " + config["model"]["results_path"])
 
+    label_confidence = []
+    unlabeled_files = list(dataset_unlabeled_uid_file_generator(config))
+    for i in range(0, len(unlabeled_files)):
+        label_confidence.append([unlabeled_files[i][0], confusion_scores[i]])
+
     with open(config["model"]["results_path"], "w") as results_file:
-        json.dump({"accuracy" : history.history['val_accuracy'][-1]}, results_file)
+        json.dump({"accuracy" : history.history['val_accuracy'][-1], "label_confidence": label_confidence}, results_file)
 
 if __name__ == "__main__":
     main()

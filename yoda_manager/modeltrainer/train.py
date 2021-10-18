@@ -1,4 +1,3 @@
-
 from yoda_manager.core.database import Database
 from yoda_manager.util.config import get_config
 
@@ -31,6 +30,9 @@ def train(model_config):
 
     update_training_job(database, train_config_path, training_config, job)
 
+    data_versioned_db = Database(config, config["data_manager"]["default_table_name"])
+    update_label_confidence_scores(data_versioned_db, training_config)
+
     return train_config_path
 
 def make_training_directory(config, model_config):
@@ -61,6 +63,20 @@ def record_training_job(database, train_config_path, model_config):
     database.insert(job)
 
     return job
+
+def update_label_confidence_scores(db_table, training_config):
+    logger.debug("Updating scores from " + training_config["model"]["results_path"])
+    with open(training_config["model"]["results_path"]) as results_file:
+        results = json.load(results_file)
+
+    for result in results["label_confidence"]:
+        query = {"uid": result[0]}
+        entry = db_table.search({"uid" : query})[0]
+        entry['label_confidence'] = result[1]
+        db_table.update(query, entry)
+        print(db_table.search({"uid" : query})[0])
+
+
 
 def update_training_job(database, train_config_path, training_config, job):
     logger.debug("Loading results from " + training_config["model"]["results_path"])

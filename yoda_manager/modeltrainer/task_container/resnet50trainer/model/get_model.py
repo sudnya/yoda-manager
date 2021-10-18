@@ -12,23 +12,18 @@ def get_model(config, dataset):
 
 def get_keyword_model(config, dataset):
 
-    #resnet50 = tf.keras.applications.resnet50.ResNet50(
-    #    include_top=False, weights=None, input_tensor=None,
-    #    input_shape=(224, 224, 3), pooling=None, classes=1000
-    #)
-
-    resnet50 = tf.keras.applications.MobileNetV3Small(
-        include_top=False, weights=None, input_tensor=None,
+    t_model = tf.keras.applications.MobileNetV3Small(
+        include_top=False, weights="imagenet", input_tensor=None,
         input_shape=(224, 224, 3), pooling=None, classes=1000
     )
 
-    #Flatten output layer of Resnet
-    flattened = tf.keras.layers.Flatten()(resnet50.output)
+    #Flatten output layer
+    flattened = tf.keras.layers.Flatten()(t_model.output)
 
     #Fully connected layer 1
-    fc1 = tf.keras.layers.Dense(2, activation='relu', name="AddedDense1")(flattened)
+    fc1 = tf.keras.layers.Dense(2, name="AddedDense1")(flattened)
 
-    model = tf.keras.models.Model(inputs=resnet50.input, outputs=fc1)
+    model = tf.keras.models.Model(inputs=t_model.input, outputs=fc1)
 
     model.compile(
         optimizer=tf.keras.optimizers.Adam(),

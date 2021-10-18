@@ -20,10 +20,10 @@ def dataUpload():
         yoda_manager.upload_from_file(request.json)
     return {"response": "200"}
 
-@app.route('/yoda-manager/get-data-view', methods=['GET'])
+@app.route('/yoda-manager/get-data-view', methods=['GET', 'POST'])
 def getView():
-    logger.debug("Get View of data" + str(request.args))
-    return {"response" : yoda_manager.get_selected_view_rows(request.args)}
+    logger.debug("Get View of data" + str(request.json))
+    return {"response" : yoda_manager.get_selected_view_rows(request.json)}
 
 @app.route('/yoda-manager/update-labels', methods=['GET', 'POST'])
 def updateLabels():
