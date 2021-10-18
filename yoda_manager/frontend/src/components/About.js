@@ -24,11 +24,11 @@ export default function About() {
         A data centric platform using image classification with active learning.
 
         <ul>
-            <li><b>Data Management</b>
+            <li><b>Data Management : </b>
               Upload and manage your image data.</li>
-            <li><b>Model Training</b>
+            <li><b>Model Training : </b>
               Iteratively train and refine your vision models using error analysis.</li>
-            <li><b>Deployment Management</b>
+            <li><b>Deployment Management : </b>
               Deploy your trained models to production.</li>
         </ul>
         </Typography>
