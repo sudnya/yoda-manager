@@ -8,8 +8,15 @@ export default class DataManager extends React.Component {
             csvPath : "s3://yoda-tiny-set/versions/snapshot1.csv",
             images: [],
             viewFilter: {
-                is_baby_yoda: "1",
-                sample_set_type: "train"
+                split: {
+                    train : false,
+                    test : false
+                },
+                labels: {
+                    is_labeled : false
+                },
+                is_baby_yoda : false,
+                needs_help: false
             },
             updatedBabyYodaLabel: '1',
             updateLabelsBody: []
@@ -17,17 +24,19 @@ export default class DataManager extends React.Component {
         this.handlePathUpdate = this.handlePathUpdate.bind(this)
         this.handleViewUpdate = this.handleViewUpdate.bind(this)
         this.handleTrainUpdate = this.handleTrainUpdate.bind(this);
+        this.handleTestUpdate = this.handleTestUpdate.bind(this);
         this.handleIsConceptUpdate = this.handleIsConceptUpdate.bind(this);
         this.handleUpdateLabels = this.handleUpdateLabels.bind(this);
         this.handleImageClick= this.handleImageClick.bind(this);
         this.handleLabelUpdate = this.handleLabelUpdate.bind(this);
+        this.handleLabeledUpdate = this.handleLabeledUpdate.bind(this);
+        this.handleNeedsHelpUpdate = this.handleNeedsHelpUpdate.bind(this);
     }
 
     handlePathUpdate(path) {
         console.log("updated path: " + path.target.value)
         this.setState({csvPath: path.target.value});
     }
-
 
     handleViewUpdate(presignedpaths) {
         console.log(presignedpaths.response)
@@ -37,28 +46,34 @@ export default class DataManager extends React.Component {
         this.setState({images: tempList});
     }
 
-
     handleTrainUpdate() {
-        console.log("Added train to filter. ");
-        var viewFilter = {...this.state.viewFilter};
-        if (viewFilter.sample_set_type === "dev")
-            viewFilter.sample_set_type = "train";
-        else
-            viewFilter.sample_set_type = "dev";
-
-        this.setState({viewFilter});
-        this.getView(viewFilter);
+        console.log("updated train: ");
+        var view = {...this.state.viewFilter};
+        view.split.train = !view.split.train;
+        this.setState({view});
+        this.getView(view);
     }
 
+    handleTestUpdate() {
+        console.log("updated test: ");
+        var view = {...this.state.viewFilter};
+        view.split.test = !view.split.test;
+        this.setState({view});
+        this.getView(view);
+    }
+
+    handleLabeledUpdate() {
+        console.log("updated labeled: ");
+        var view = {...this.state.viewFilter};
+        view.labels.is_labeled = !view.labels.is_labeled;
+        this.setState({view});
+        this.getView(view);
+    }
 
     handleIsConceptUpdate() {
         console.log("Added is_baby_yoda to filter. ");
         var viewFilter = {...this.state.viewFilter};
-
-        if (viewFilter.is_baby_yoda === '0')
-            viewFilter.is_baby_yoda = '1';
-        else
-            viewFilter.is_baby_yoda = '0';
+        viewFilter.is_baby_yoda = !viewFilter.is_baby_yoda;
 
         this.setState({viewFilter});
         this.getView(viewFilter);
@@ -84,8 +99,15 @@ export default class DataManager extends React.Component {
         
         console.log(updateLabelsBody)
         return updateLabelsBody;
-        //this.setState({updateLabelsBody});
-        //this.getView(view);
+    }
+
+    handleNeedsHelpUpdate() {
+        console.log("The following images need most label help.");
+        var viewFilter = {...this.state.viewFilter};
+        viewFilter.needs_help = !viewFilter.needs_help;
+
+        this.setState({viewFilter});
+        this.getView(viewFilter);
     }
 
     handleImageClick(item) {
@@ -115,16 +137,15 @@ export default class DataManager extends React.Component {
     }
 
     getView(view) {
-        var url = new URL(process.env.REACT_APP_API_URL + '/yoda-manager/get-data-view'),
-        params = view
-        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]))
+        var url = new URL(process.env.REACT_APP_API_URL + '/yoda-manager/get-data-view');
         fetch(url,
             {
-                method: 'GET', 
+                method: 'POST', 
                 cache: 'no-cache',
                 headers: {
                   'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify(transformView(view))
             }
         )
         .then(res => res.json())
@@ -135,7 +156,7 @@ export default class DataManager extends React.Component {
         .catch(console.log)
     }
 
-    updateSelected(images) {
+    updateSelected() {
         var url = new URL(process.env.REACT_APP_API_URL + '/yoda-manager/update-labels');
         var updateLabelsBody = this.handleUpdateLabels();
         fetch(url,
@@ -163,7 +184,7 @@ export default class DataManager extends React.Component {
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ view : this.state.viewFilter, data : this.state.images}) // body data type must match "Content-Type" header
+            body: JSON.stringify({ view : transformView(this.state.viewFilter), data : this.state.images}) // body data type must match "Content-Type" header
         }
     )
     .then(res => res.json())
@@ -191,9 +212,12 @@ export default class DataManager extends React.Component {
 
         <Grid container justifyContent = "center">
         <FormGroup>
-                <FormControlLabel control={<Checkbox defaultChecked onClick={this.handleTrainUpdate} />}  label="Train" />
-                <FormControlLabel control={<Checkbox defaultChecked onClick={this.handleIsConceptUpdate} />}  label="IsBabyYoda" />
-            </FormGroup>
+            <FormControlLabel control={<Checkbox onClick={this.handleTrainUpdate} />} label="Train" />
+            <FormControlLabel control={<Checkbox onClick={this.handleTestUpdate} />} label="Test" />
+            <FormControlLabel control={<Checkbox onClick={this.handleLabeledUpdate}  />} label="Labeled" />
+            <FormControlLabel control={<Checkbox onClick={this.handleIsConceptUpdate}  />} label="IsBabyYoda" />
+            <FormControlLabel control={<Checkbox onClick={this.handleNeedsHelpUpdate}  />} label="ActiveLearningSuggestion" />
+        </FormGroup>
             <Button id="getView" variant="contained" onClick={() =>
                 {
                     this.getView(this.state.viewFilter);
@@ -210,7 +234,7 @@ export default class DataManager extends React.Component {
             </FormGroup>
             <Button id="updateSelected" variant="contained" onClick={() =>
                 {
-                    this.updateSelected(this.state.images);
+                    this.updateSelected();
                 }
             }>
             Update labels of selected
@@ -249,3 +273,30 @@ export default class DataManager extends React.Component {
         </div>;
     }
 }
+
+function transformView(view) {
+    var sample_set_types = [];
+    if (view.split.train) {
+        sample_set_types.push("train");
+    }
+    if (view.split.test) {
+        sample_set_types.push("test");
+    }
+    var transformedView = {};
+    if (sample_set_types.length > 0) {
+        transformedView["split"] = {
+            sample_set_type : sample_set_types
+        };
+    }
+    if (view.labels.is_labeled) {
+        transformedView["labels"] = { is_labeled : "1" };
+    }
+    if (view.is_baby_yoda) {
+        transformedView["is_baby_yoda"] = { is_baby_yoda: "1"};
+    }
+    if (view.needs_help) {
+        transformedView["labels"] = { is_labeled : "0" };
+    }
+    return transformedView;
+}
+

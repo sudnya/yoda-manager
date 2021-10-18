@@ -13,14 +13,10 @@ def update_labels(updated_labels):
     database = Database(get_config(), get_config()['data_manager']['default_table_name'])
     for label in updated_labels:
         query = { 'uid' : label.get('uid')}
-        entry = database.search(query)[0]
-        print(label)
-        print('Returned entry:')
-        print(entry)
+        entry = database.search({"uid" : query})[0]
         entry['is_baby_yoda'] = label.get('is_baby_yoda')
+        entry['is_labeled'] = 1
         database.update(query, entry)
-        print('updated entry in db')
-        print(database.search(query)[0])
         #TODO: write to a new label file and update path in dataversion
         label_path = entry.get('labelpath')
         write_to_path(label_path, {'is_baby_yoda' : entry['is_baby_yoda']})
